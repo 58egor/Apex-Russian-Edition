@@ -4,13 +4,23 @@ using UnityEngine;
 
 public class MovementSM : StateMachine
 {
+    public float X { get; private set; }
+    public float Y { get; private set; }
+    public Character Character { get; private set; }
+    [field: SerializeField] public float CharacterMoveSpeed { get; private set; }
+
     private IdleState _idleState;
     private MovingState _movingState;
-    private Character _character;
 
     public void Init(Character character)
     {
-        _character = character;
+        Character = character;
+    }
+
+    public void SetXY(float x,float y)
+    {
+        X = x;
+        Y = y;
     }
 
     private void Awake()
@@ -23,4 +33,9 @@ public class MovementSM : StateMachine
     {
        return _idleState;
     }
+
+    public void SetMovingState() => ChangeState(_movingState);
+
+    public void SetIdleState() => ChangeState(_idleState);
+
 }

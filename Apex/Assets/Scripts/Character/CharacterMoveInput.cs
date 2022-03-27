@@ -4,15 +4,21 @@ using UnityEngine;
 
 public class CharacterMoveInput : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    private Character _character;
+    private void Awake()
     {
-        
+        _character = GetComponent<Character>();   
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        
+        CheckInput();
+    }
+
+    private void CheckInput()
+    {
+        float x = Input.GetAxisRaw("Horizontal");
+        float y = Input.GetAxisRaw("Vertical");
+        _character.MovementSM.SetXY(x, y);
     }
 }

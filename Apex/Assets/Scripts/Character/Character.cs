@@ -5,13 +5,26 @@ using UnityEngine;
 public class Character : MonoBehaviour
 {
     public Rigidbody Rigidbody { get; private set; }
-    private MovementSM _movementSM;
+    public CharacterMoveInput MoveInput {get;private set;}
+    public MovementSM MovementSM { get; private set; }
+
 
     private void Awake()
     {
         Rigidbody = GetComponent<Rigidbody>();
-        _movementSM = GetComponent<MovementSM>();
+        MoveInput = GetComponent<CharacterMoveInput>();
+        MovementSM = GetComponent<MovementSM>();
 
-        _movementSM.Init(this);
+        MovementSM.Init(this);
+    }
+
+    private void FixedUpdate()
+    {
+        AddExtraGravity();
+    }
+
+    private void AddExtraGravity()
+    {
+        Rigidbody.AddForce(Vector3.down * Time.deltaTime * 10);
     }
 }
