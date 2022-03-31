@@ -15,4 +15,5 @@ public class IdleState : BaseState
         if (Mathf.Abs(_movementSM.X) > 0 || Mathf.Abs(_movementSM.Y) > 0)
             _movementSM.SetMovingState();
     }
+
 }

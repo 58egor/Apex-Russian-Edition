@@ -9,6 +9,8 @@ public class MovementSM : StateMachine
     public Character Character { get; private set; }
     [field: SerializeField] public float CharacterMoveSpeed { get; private set; }
     [field: SerializeField] public float MaxCharacterMoveSpeed { get; private set; }
+    [field: SerializeField] public float CounterMovement { get;private set; }
+    [field: SerializeField] public float Threshold { get; private set; }
 
     private IdleState _idleState;
     private MovingState _movingState;

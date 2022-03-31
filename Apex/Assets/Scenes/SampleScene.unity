@@ -263,7 +263,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <CharacterMoveSpeed>k__BackingField: 1000
-  <MaxCharacterMoveSpeed>k__BackingField: 0
+  <MaxCharacterMoveSpeed>k__BackingField: 5
+  <CounterMovement>k__BackingField: 0.175
+  <Threshold>k__BackingField: 0.01
 --- !u!114 &224646840
 MonoBehaviour:
   m_ObjectHideFlags: 0
