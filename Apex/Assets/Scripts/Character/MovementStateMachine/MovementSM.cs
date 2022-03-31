@@ -8,6 +8,7 @@ public class MovementSM : StateMachine
     public float Y { get; private set; }
     public Character Character { get; private set; }
     [field: SerializeField] public float CharacterMoveSpeed { get; private set; }
+    [field: SerializeField] public float MaxCharacterMoveSpeed { get; private set; }
 
     private IdleState _idleState;
     private MovingState _movingState;
@@ -38,4 +39,13 @@ public class MovementSM : StateMachine
 
     public void SetIdleState() => ChangeState(_idleState);
 
+    private void FixedUpdate()
+    {
+        AddExtraGravity();
+    }
+
+    private void AddExtraGravity()
+    {
+        Character.Rigidbody.AddForce(Vector3.down * Time.deltaTime * 10);
+    }
 }

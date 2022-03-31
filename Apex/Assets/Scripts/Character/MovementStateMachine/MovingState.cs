@@ -29,4 +29,5 @@ public class MovingState : BaseState
        _character.Rigidbody.AddForce(_character.transform.forward * _movementSM.Y * _movementSM.CharacterMoveSpeed * Time.deltaTime * _multiplier * _multiplierV);
        _character.Rigidbody.AddForce(_character.transform.right * _movementSM.X * _movementSM.CharacterMoveSpeed * Time.deltaTime * _multiplier);
     }
+
 }
