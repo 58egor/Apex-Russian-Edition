@@ -19,6 +19,12 @@ public class CharacterMoveInput : MonoBehaviour
     {
         float x = Input.GetAxisRaw("Horizontal");
         float y = Input.GetAxisRaw("Vertical");
+
+        _character.MovementSM.IsJumpButtonPressed = Input.GetButton("Jump");
+
+        if (Input.GetButtonDown("Jump"))
+            _character.MovementSM.JumpButtonIsProssed();
+
         _character.MovementSM.SetXY(x, y);
     }
 }

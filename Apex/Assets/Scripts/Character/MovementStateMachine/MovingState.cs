@@ -16,8 +16,12 @@ public class MovingState : BaseState
 
     public override void UpdateLogic()
     {
+        if (_movementSM.IsJumpAvailable && _movementSM.IsJumpButtonPressed)
+            _movementSM.SetJumpState();
+
        if (_character.Rigidbody.velocity == Vector3.zero)
             _movementSM.SetIdleState();
+
     }
 
     public override void UpdatePhysics()
