@@ -7,21 +7,33 @@ public class MovingState : BaseState
 {
     private MovementSM _movementSM;
     private Character _character => _movementSM.Character;
-    private float _multiplier = 1f;
-    private float _multiplierV = 1f;
+    protected virtual float _multiplier => 1f;
+    protected virtual float _multiplierV => 1f;
     public MovingState(MovementSM stateMachine) : base("Moving", stateMachine)
     {
         _movementSM = stateMachine;
     }
 
+    public override void Enter()
+    {
+        _movementSM.OnJumpButtonPressed += Jump;
+    }
+
+    protected void Jump()
+    {
+        _movementSM.SetJumpState();
+    }
+
+    public override void Exit()
+    {
+        _movementSM.OnJumpButtonPressed -= Jump;
+    }
+
+
     public override void UpdateLogic()
     {
-        if (_movementSM.IsJumpAvailable && _movementSM.IsJumpButtonPressed)
-            _movementSM.SetJumpState();
-
        if (_character.Rigidbody.velocity == Vector3.zero)
             _movementSM.SetIdleState();
-
     }
 
     public override void UpdatePhysics()
@@ -29,7 +41,7 @@ public class MovingState : BaseState
         MoveCharacter();
     }
 
-    private void MoveCharacter()
+    protected void MoveCharacter()
     {
         Vector2 mag = FindVelRelativeToLook();
 

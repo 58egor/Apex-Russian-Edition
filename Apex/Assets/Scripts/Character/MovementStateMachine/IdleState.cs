@@ -12,11 +12,26 @@ public class IdleState : BaseState
 
     public override void UpdateLogic()
     {
-        if (_movementSM.IsJumpAvailable && _movementSM.IsJumpButtonPressed)
-            _movementSM.SetJumpState();
+       // if (_movementSM.IsJumpAvailable && _movementSM.IsJumpButtonPressed)
+         //   _movementSM.SetJumpState();
 
         if (Mathf.Abs(_movementSM.X) > 0 || Mathf.Abs(_movementSM.Y) > 0)
             _movementSM.SetMovingState();
+    }
+
+    public override void Enter()
+    {
+        _movementSM.OnJumpButtonPressed += Jump;
+    }
+
+    private void Jump()
+    {
+        _movementSM.SetJumpState();
+    }
+
+    public override void Exit()
+    {
+        _movementSM.OnJumpButtonPressed -= Jump;
     }
 
 }

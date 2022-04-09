@@ -27,7 +27,7 @@ public class StateMachine : MonoBehaviour
 
     public void ChangeState(BaseState newState)
     {
-        Debug.LogError(newState.name);
+        Debug.LogError(newState.Name);
         currentState.Exit();
 
         currentState = newState;

@@ -23,6 +23,7 @@ public class MovementSM : StateMachine
     private IdleState _idleState;
     private MovingState _movingState;
     private JumpState _jumpState;
+    private InAirState _inAirState;
 
     public void Init(Character character)
     {
@@ -40,6 +41,7 @@ public class MovementSM : StateMachine
         _idleState = new IdleState(this);
         _movingState = new MovingState(this);
         _jumpState = new JumpState(this);
+        _inAirState = new InAirState(this);
     }
 
     protected override BaseState GetInitialState()
@@ -57,6 +59,8 @@ public class MovementSM : StateMachine
         StartCoroutine(DisableJumpingForTime());
     }
 
+    public void SetInAirState() => ChangeState(_inAirState);
+
     private void FixedUpdate()
     {
         AddExtraGravity();
@@ -70,6 +74,7 @@ public class MovementSM : StateMachine
     private void OnDisable()
     {
         DOTween.Kill(this);
+        StopAllCoroutines();
     }
 
     IEnumerator DisableJumpingForTime()

@@ -171,7 +171,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: bb742d83ed804da40afff0bb98de17b3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -267,7 +267,7 @@ MonoBehaviour:
   <CounterMovement>k__BackingField: 0.175
   <Threshold>k__BackingField: 0.01
   <JumpCooldown>k__BackingField: 0.25
-  <JumpForce>k__BackingField: 550
+  <JumpForce>k__BackingField: 325
 --- !u!114 &224646840
 MonoBehaviour:
   m_ObjectHideFlags: 0

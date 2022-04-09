@@ -2,17 +2,32 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class InAirState : MonoBehaviour
+public class InAirState : MovingState
 {
-    // Start is called before the first frame update
-    void Start()
+    protected override float _multiplier => 0.5f;
+    protected override float _multiplierV => 0.5f;
+
+    public InAirState(MovementSM stateMachine) : base(stateMachine)
+    {
+        Name = "InAir";
+    }
+
+    public override void UpdatePhysics()
+    {
+        MoveCharacter();
+    }
+
+    public override void UpdateLogic()
+    {
+    }
+
+    public override void Enter()
     {
         
     }
 
-    // Update is called once per frame
-    void Update()
+    public override void Exit()
     {
-        
+
     }
 }
