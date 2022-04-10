@@ -19,6 +19,8 @@ public class InAirState : MovingState
 
     public override void UpdateLogic()
     {
+        if (_movementSM.IsOnGround == true)
+            _movementSM.SetIdleState();
     }
 
     public override void Enter()

@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class MovingState : BaseState
 {
-    private MovementSM _movementSM;
+    protected MovementSM _movementSM;
     private Character _character => _movementSM.Character;
     protected virtual float _multiplier => 1f;
     protected virtual float _multiplierV => 1f;
@@ -32,6 +32,9 @@ public class MovingState : BaseState
 
     public override void UpdateLogic()
     {
+        if (_movementSM.IsOnGround == false)
+            _movementSM.SetInAirState();
+
        if (_character.Rigidbody.velocity == Vector3.zero)
             _movementSM.SetIdleState();
     }

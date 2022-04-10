@@ -25,4 +25,9 @@ public class JumpState : BaseState
 
         _movementSM.SetInAirState();
     }
+
+    public override void Exit()
+    {
+        _movementSM.IsOnGround = false;
+    }
 }

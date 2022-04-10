@@ -12,8 +12,8 @@ public class IdleState : BaseState
 
     public override void UpdateLogic()
     {
-       // if (_movementSM.IsJumpAvailable && _movementSM.IsJumpButtonPressed)
-         //   _movementSM.SetJumpState();
+        if (_movementSM.IsOnGround == false)
+            _movementSM.SetInAirState();
 
         if (Mathf.Abs(_movementSM.X) > 0 || Mathf.Abs(_movementSM.Y) > 0)
             _movementSM.SetMovingState();

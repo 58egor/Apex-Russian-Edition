@@ -133,7 +133,7 @@ GameObject:
   - component: {fileID: 183708162}
   - component: {fileID: 183708161}
   - component: {fileID: 183708160}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -268,6 +268,10 @@ MonoBehaviour:
   <Threshold>k__BackingField: 0.01
   <JumpCooldown>k__BackingField: 0.25
   <JumpForce>k__BackingField: 325
+  <GroundLayer>k__BackingField:
+    serializedVersion: 2
+    m_Bits: 256
+  _maxSlopeAngle: 35
 --- !u!114 &224646840
 MonoBehaviour:
   m_ObjectHideFlags: 0
