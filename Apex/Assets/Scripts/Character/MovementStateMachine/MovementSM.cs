@@ -30,6 +30,10 @@ public class MovementSM : StateMachine
     private InAirState _inAirState;
     private Coroutine _disableGroundCoroutine;
 
+    private bool _isCheckGroundAvailable = true;
+
+    private const float _additionalValue = 3f;
+
     public void Init(Character character)
     {
         Character = character;
@@ -61,10 +65,16 @@ public class MovementSM : StateMachine
     public void SetJumpState()
     {
         ChangeState(_jumpState);
-        StartCoroutine(DisableJumpingForTime());
+        StartCoroutine(DisableJumpingForTime(JumpCooldown));
+
+        //TODO костыль, придумать как лучше после прыжка оставаться в состоянии в воздухе
+        StartCoroutine(DisableCheckGround((Time.deltaTime * _additionalValue)));
     }
 
-    public void SetInAirState() => ChangeState(_inAirState);
+    public void SetInAirState()
+    {
+        ChangeState(_inAirState);
+    }
 
     private void FixedUpdate()
     {
@@ -82,12 +92,22 @@ public class MovementSM : StateMachine
         StopAllCoroutines();
     }
 
-    IEnumerator DisableJumpingForTime()
+    IEnumerator DisableJumpingForTime(float time)
     {
         IsJumpAvailable = false;
-        yield return new WaitForSeconds(JumpCooldown);
+        yield return new WaitForSeconds(time);
         IsOnGround = false;
         IsJumpAvailable = true;
+    }
+
+    IEnumerator DisableCheckGround(float time)
+    {
+        _isCheckGroundAvailable = false;
+        if (_disableGroundCoroutine == null)
+            _disableGroundCoroutine = StartCoroutine(StopGrounded(time));
+
+        yield return new WaitForSeconds(time);
+        _isCheckGroundAvailable = true;
     }
 
     public void JumpButtonIsProssed() => OnJumpButtonPressed?.Invoke();
@@ -103,7 +123,7 @@ public class MovementSM : StateMachine
     private void OnCollisionStay(Collision collision)
     {
         int layer = collision.gameObject.layer;
-        if (GroundLayer != (GroundLayer | (1 << layer))) 
+        if (GroundLayer != (GroundLayer | (1 << layer)) || _isCheckGroundAvailable == false) 
             return;
 
         for (int i = 0; i < collision.contactCount; i++)
@@ -127,7 +147,7 @@ public class MovementSM : StateMachine
             {
                 cancellingGrounded = true;
                 if(_disableGroundCoroutine == null)
-                    _disableGroundCoroutine = StartCoroutine(StopGrounded(Time.deltaTime * 3f));
+                    _disableGroundCoroutine = StartCoroutine(StopGrounded(Time.deltaTime * _additionalValue));
             }
         }
     }
@@ -135,7 +155,6 @@ public class MovementSM : StateMachine
     IEnumerator StopGrounded(float time)
     {
         yield return new WaitForSeconds(time);
-        Debug.LogError("kek");
         IsOnGround = false;
     }
 }

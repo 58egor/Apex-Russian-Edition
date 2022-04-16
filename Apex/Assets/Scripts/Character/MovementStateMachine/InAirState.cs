@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 public class InAirState : MovingState
 {
@@ -30,6 +31,6 @@ public class InAirState : MovingState
 
     public override void Exit()
     {
-
+        DOTween.Kill(this);
     }
 }
