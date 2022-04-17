@@ -10,17 +10,24 @@ public class MovementSM : StateMachine
 
     public event Action OnJumpButtonPressed;
     public bool IsJumpButtonPressed { get; set; } = false;
+    public bool IsCrounching { get; set; } = false;
+    public bool IsRunning { get; set; } = false;
     public Character Character { get; private set; }
     [field: SerializeField] public float CharacterMoveSpeed { get; private set; }
     [field: SerializeField] public float MaxCharacterMoveSpeed { get; private set; }
+    [field: SerializeField] public float MaxCharacterAirMoveSpeed { get; private set; }
+    [field: SerializeField] public float MaxCharacterCrounchSpeed { get; private set; }
+    [field: SerializeField] public float MaxCharacterRunSpeed { get; private set; }
     [field: SerializeField] public float CounterMovement { get;private set; }
     [field: SerializeField] public float Threshold { get; private set; }
     [field: SerializeField] public float JumpCooldown { get; private set; } = 0.25f;
     [field: SerializeField] public float JumpForce { get; private set; } = 550f;
     [field: SerializeField] public LayerMask GroundLayer { get; private set; }
+    [field: SerializeField] public Vector3 crouchScale { get; private set; } = new Vector3(1, 0.5f, 1);
     public Vector3 NormalVector { get; private set; } = Vector3.up;
     public bool IsJumpAvailable { get; private set; } = true;
     public bool IsOnGround { get; set; } = true;
+    public Vector3 _playerScale { get; private set; }
 
     [SerializeField] private float _maxSlopeAngle = 35f;
 
@@ -28,6 +35,9 @@ public class MovementSM : StateMachine
     private MovingState _movingState;
     private JumpState _jumpState;
     private InAirState _inAirState;
+    private CrounchState _crounchState;
+    private RunState _runState;
+
     private Coroutine _disableGroundCoroutine;
 
     private bool _isCheckGroundAvailable = true;
@@ -37,6 +47,7 @@ public class MovementSM : StateMachine
     public void Init(Character character)
     {
         Character = character;
+        _playerScale = Character.transform.localScale;
     }
 
     public void SetXY(float x,float y)
@@ -48,9 +59,11 @@ public class MovementSM : StateMachine
     private void Awake()
     {
         _idleState = new IdleState(this);
-        _movingState = new MovingState(this);
+        _movingState = new MovingState(this,CharacterMoveSpeed,MaxCharacterMoveSpeed);
         _jumpState = new JumpState(this);
-        _inAirState = new InAirState(this);
+        _inAirState = new InAirState(this, CharacterMoveSpeed, MaxCharacterAirMoveSpeed);
+        _crounchState = new CrounchState(this, CharacterMoveSpeed, MaxCharacterCrounchSpeed);
+        _runState = new RunState(this, CharacterMoveSpeed, MaxCharacterRunSpeed);
     }
 
     protected override BaseState GetInitialState()
@@ -76,9 +89,12 @@ public class MovementSM : StateMachine
         ChangeState(_inAirState);
     }
 
+    public void SetCrounchState() => ChangeState(_crounchState);
+    public void SetRunState() => ChangeState(_runState);
     private void FixedUpdate()
     {
         AddExtraGravity();
+
     }
 
     private void AddExtraGravity()
@@ -107,6 +123,7 @@ public class MovementSM : StateMachine
             _disableGroundCoroutine = StartCoroutine(StopGrounded(time));
 
         yield return new WaitForSeconds(time);
+
         _isCheckGroundAvailable = true;
     }
 

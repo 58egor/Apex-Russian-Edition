@@ -6,12 +6,17 @@ using UnityEngine;
 public class MovingState : BaseState
 {
     protected MovementSM _movementSM;
-    private Character _character => _movementSM.Character;
+    protected Character _character => _movementSM.Character;
     protected virtual float _multiplier => 1f;
     protected virtual float _multiplierV => 1f;
-    public MovingState(MovementSM stateMachine) : base("Moving", stateMachine)
+
+    private float _speed;
+    private float _maxSpeed;
+    public MovingState(MovementSM stateMachine,float speed,float maxSpeed) : base("Moving", stateMachine)
     {
         _movementSM = stateMachine;
+        _speed = speed;
+        _maxSpeed = maxSpeed;
     }
 
     public override void Enter()
@@ -29,14 +34,24 @@ public class MovingState : BaseState
         _movementSM.OnJumpButtonPressed -= Jump;
     }
 
-
     public override void UpdateLogic()
     {
-        if (_movementSM.IsOnGround == false)
-            _movementSM.SetInAirState();
+        CheckForGround();
 
        if (_character.Rigidbody.velocity == Vector3.zero)
             _movementSM.SetIdleState();
+
+        if (_movementSM.IsCrounching)
+            _movementSM.SetCrounchState();
+
+        if (_movementSM.IsRunning)
+            _movementSM.SetRunState();
+    }
+
+    protected void CheckForGround()
+    {
+        if (_movementSM.IsOnGround == false)
+            _movementSM.SetInAirState();
     }
 
     public override void UpdatePhysics()
@@ -53,8 +68,8 @@ public class MovingState : BaseState
         float x = CheckForMaxSpeed(_movementSM.X, mag.x);
         float y = CheckForMaxSpeed(_movementSM.Y, mag.y);
 
-        _character.Rigidbody.AddForce(_character.transform.forward * y * _movementSM.CharacterMoveSpeed * Time.deltaTime * _multiplier * _multiplierV);
-       _character.Rigidbody.AddForce(_character.transform.right * x * _movementSM.CharacterMoveSpeed * Time.deltaTime * _multiplier);
+        _character.Rigidbody.AddForce(_character.transform.forward * y * _speed * Time.deltaTime * _multiplier * _multiplierV);
+       _character.Rigidbody.AddForce(_character.transform.right * x * _speed * Time.deltaTime * _multiplier);
     }
 
     private Vector2 FindVelRelativeToLook()
@@ -64,7 +79,6 @@ public class MovingState : BaseState
 
         float u = Mathf.DeltaAngle(lookAngle, moveAngle);
         float v = 90 - u;
-
         float magnitue = _character.Rigidbody.velocity.magnitude;
         float yMag = magnitue * Mathf.Cos(u * Mathf.Deg2Rad);
         float xMag = magnitue * Mathf.Cos(v * Mathf.Deg2Rad);
@@ -74,12 +88,12 @@ public class MovingState : BaseState
 
     private float CheckForMaxSpeed(float direction, float mag)
     {
-        if (direction > 0 && mag > _movementSM.MaxCharacterMoveSpeed) return 0;
-        if (direction < 0 && mag < -_movementSM.MaxCharacterMoveSpeed) return 0;
+        if (direction > 0 && mag > _maxSpeed) return 0;
+        if (direction < 0 && mag < -_maxSpeed) return 0;
         return direction;
     }
 
-    private void CounterMovement(float x, float y, Vector2 mag)
+    protected virtual void CounterMovement(float x, float y, Vector2 mag)
     {
         if (Math.Abs(mag.x) > _movementSM.Threshold && Math.Abs(x) < 0.05f || (mag.x < -_movementSM.Threshold && x > 0) || (mag.x > _movementSM.Threshold && x < 0))
         {
@@ -91,10 +105,10 @@ public class MovingState : BaseState
         }
 
         //Limit diagonal running. This will also cause a full stop if sliding fast and un-crouching, so not optimal.
-        if (Mathf.Sqrt((Mathf.Pow(_character.Rigidbody.velocity.x, 2) + Mathf.Pow(_character.Rigidbody.velocity.z, 2))) > _movementSM.MaxCharacterMoveSpeed)
+        if (Mathf.Sqrt((Mathf.Pow(_character.Rigidbody.velocity.x, 2) + Mathf.Pow(_character.Rigidbody.velocity.z, 2))) > _maxSpeed)
         {
             float fallspeed = _character.Rigidbody.velocity.y;
-            Vector3 n = _character.Rigidbody.velocity.normalized * _movementSM.MaxCharacterMoveSpeed;
+            Vector3 n = _character.Rigidbody.velocity.normalized * _maxSpeed;
             _character.Rigidbody.velocity = new Vector3(n.x, fallspeed, n.z);
         }
     }

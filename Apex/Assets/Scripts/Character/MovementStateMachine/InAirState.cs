@@ -5,17 +5,17 @@ using DG.Tweening;
 
 public class InAirState : MovingState
 {
-    protected override float _multiplier => 0.5f;
-    protected override float _multiplierV => 0.5f;
+    protected override float _multiplier => 1f;
+    protected override float _multiplierV => 1f;
 
-    public InAirState(MovementSM stateMachine) : base(stateMachine)
+    public InAirState(MovementSM stateMachine,float speed,float maxSpeed) : base(stateMachine,speed, maxSpeed)
     {
         Name = "InAir";
     }
 
     public override void UpdatePhysics()
     {
-        MoveCharacter();
+       // MoveCharacter();
     }
 
     public override void UpdateLogic()

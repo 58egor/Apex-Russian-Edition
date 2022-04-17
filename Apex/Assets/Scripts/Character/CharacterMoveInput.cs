@@ -20,7 +20,9 @@ public class CharacterMoveInput : MonoBehaviour
         float x = Input.GetAxisRaw("Horizontal");
         float y = Input.GetAxisRaw("Vertical");
 
+        _character.MovementSM.IsCrounching = Input.GetButton("Crounch");
         _character.MovementSM.IsJumpButtonPressed = Input.GetButton("Jump");
+        _character.MovementSM.IsRunning = Input.GetButton("Run");
 
         if (Input.GetButtonDown("Jump"))
             _character.MovementSM.JumpButtonIsProssed();

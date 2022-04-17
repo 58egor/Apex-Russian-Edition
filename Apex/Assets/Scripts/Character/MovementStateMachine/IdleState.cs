@@ -14,9 +14,12 @@ public class IdleState : BaseState
     {
         if (_movementSM.IsOnGround == false)
             _movementSM.SetInAirState();
-
+        
         if (Mathf.Abs(_movementSM.X) > 0 || Mathf.Abs(_movementSM.Y) > 0)
             _movementSM.SetMovingState();
+
+        if (_movementSM.IsCrounching)
+            _movementSM.SetCrounchState();
     }
 
     public override void Enter()
