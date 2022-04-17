@@ -456,7 +456,7 @@ MonoBehaviour:
   <CounterMovement>k__BackingField: 0.175
   <Threshold>k__BackingField: 0.01
   <JumpCooldown>k__BackingField: 0.25
-  <JumpForce>k__BackingField: 325
+  <JumpForce>k__BackingField: 225
   <GroundLayer>k__BackingField:
     serializedVersion: 2
     m_Bits: 256
